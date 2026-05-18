@@ -320,23 +320,23 @@
     <table><tbody>
       <tr>
         <td class="lbl" style="width:50%">임가공비</td>
-        <td><input type="number" id="proc" placeholder="0" inputmode="decimal" oninput="calc()"></td>
+        <td><input type="text" id="proc" placeholder="0" inputmode="numeric" onfocus="stripInputOnFocus(this)" onblur="formatInputOnBlur(this)" oninput="calc()"></td>
       </tr>
       <tr>
         <td class="lbl">톤백자재비</td>
-        <td><input type="number" id="bag" placeholder="0" inputmode="decimal" oninput="calc()"></td>
+        <td><input type="text" id="bag" placeholder="0" inputmode="numeric" onfocus="stripInputOnFocus(this)" onblur="formatInputOnBlur(this)" oninput="calc()"></td>
       </tr>
       <tr>
         <td class="lbl">운반비</td>
-        <td><input type="number" id="trans" placeholder="0" inputmode="decimal" oninput="calc()"></td>
+        <td><input type="text" id="trans" placeholder="0" inputmode="numeric" onfocus="stripInputOnFocus(this)" onblur="formatInputOnBlur(this)" oninput="calc()"></td>
       </tr>
       <tr class="r-shared">
         <td class="lbl">추가운반비</td>
-        <td><input type="number" id="extra" placeholder="0" inputmode="decimal" oninput="calc()"></td>
+        <td><input type="text" id="extra" placeholder="0" inputmode="numeric" onfocus="stripInputOnFocus(this)" onblur="formatInputOnBlur(this)" oninput="calc()"></td>
       </tr>
       <tr class="r-delivery">
         <td class="lbl">납품단가</td>
-        <td><input type="number" id="del" placeholder="직접 입력" inputmode="decimal" oninput="calc()"></td>
+        <td><input type="text" id="del" placeholder="직접 입력" inputmode="numeric" onfocus="stripInputOnFocus(this)" onblur="formatInputOnBlur(this)" oninput="calc()"></td>
       </tr>
     </tbody></table>
   </div>
@@ -386,6 +386,24 @@ function fmt(n) {
   return Math.round(n).toLocaleString('ko-KR');
 }
 
+function parseNum(v) {
+  return parseFloat(String(v || '').replace(/,/g, '')) || 0;
+}
+
+function fmtInput(v) {
+  const n = parseFloat(String(v || '').replace(/,/g, ''));
+  return (n && !isNaN(n)) ? Math.round(n).toLocaleString('ko-KR') : '';
+}
+
+function formatInputOnBlur(el) {
+  el.value = fmtInput(el.value);
+}
+
+function stripInputOnFocus(el) {
+  const n = parseFloat(String(el.value).replace(/,/g, ''));
+  el.value = (n && !isNaN(n)) ? String(Math.round(n)) : '';
+}
+
 function saveValues() {
   rows.forEach((row, i) => {
     const n1 = document.getElementById(`r_name1_${i}`);
@@ -393,7 +411,7 @@ function saveValues() {
     const r1 = document.getElementById(`r_ratio1_${i}`);
     const r2 = document.getElementById(`r_ratio2_${i}`);
     if (n1) row.name  = n1.value;
-    if (p1) row.price = p1.value;
+    if (p1) row.price = String(p1.value).replace(/,/g, '');
     if (r1) row.r1    = r1.value;
     if (r2) row.r2    = r2.value;
   });
@@ -413,8 +431,11 @@ function renderRows() {
              oninput="syncShared('name',${i},this.value)">
          </td>
          <td style="padding:4px 3px">
-           <input type="number" id="r_price${sn}_${i}" value="${row.price}" placeholder="0"
-             inputmode="decimal" oninput="syncShared('price',${i},this.value)">
+           <input type="text" id="r_price${sn}_${i}" value="${fmtInput(row.price)}" placeholder="0"
+             inputmode="numeric"
+             onfocus="stripInputOnFocus(this)"
+             onblur="formatInputOnBlur(this)"
+             oninput="syncShared('price',${i},this.value.replace(/,/g,''))">
          </td>
          <td style="padding:4px 3px">
            <input type="number" id="r_ratio${sn}_${i}" value="${row[rKey]}" placeholder="0"
@@ -438,7 +459,9 @@ function syncShared(field, i, val) {
     : (document.getElementById(`r_price1_${i}`) === document.activeElement
         ? document.getElementById(`r_price2_${i}`)
         : document.getElementById(`r_price1_${i}`));
-  if (other && other !== document.activeElement) other.value = val;
+  if (other && other !== document.activeElement) {
+    other.value = field === 'price' ? fmtInput(val) : val;
+  }
   calc();
 }
 
@@ -462,8 +485,9 @@ function calcSection(s) {
   let sumR = 0, sumA = 0;
 
   rows.forEach((row, i) => {
-    const price = parseFloat(row.price) || 0;
-    const ratio = parseFloat(document.getElementById(`r_ratio${sn}_${i}`)?.value || row[rKey]) || 0;
+    const price = parseNum(row.price);
+    const ratioEl = document.getElementById(`r_ratio${sn}_${i}`);
+    const ratio = parseFloat(ratioEl != null ? ratioEl.value : row[rKey]) || 0;
     const amt   = price * ratio / 100;
     sumR += ratio;
     sumA += amt;
@@ -477,16 +501,16 @@ function calcSection(s) {
   document.getElementById(`warn${sn}`).classList.toggle('on', sumR > 0 && Math.abs(sumR - 100) > 0.05);
 
   // 공통 비용
-  const proc  = parseFloat(document.getElementById('proc')?.value)  || 0;
-  const bag   = parseFloat(document.getElementById('bag')?.value)   || 0;
-  const trans = parseFloat(document.getElementById('trans')?.value) || 0;
+  const proc  = parseNum(document.getElementById('proc')?.value);
+  const bag   = parseNum(document.getElementById('bag')?.value);
+  const trans = parseNum(document.getElementById('trans')?.value);
   const total = sumA + proc + bag + trans;
 
   document.getElementById(`${s}_total`).textContent = total > 0 ? fmt(total) : '-';
 
   // 납품단가 힌트
-  const extra = parseFloat(document.getElementById('extra')?.value) || 0;
-  const del   = parseFloat(document.getElementById('del')?.value)   || 0;
+  const extra = parseNum(document.getElementById('extra')?.value);
+  const del   = parseNum(document.getElementById('del')?.value);
   const hintEl = document.getElementById(`${s}_hint`);
   hintEl.textContent = (total > 0 && extra > 0)
     ? `납품단가 참고: ${fmt(total)} + ${fmt(extra)} = ${fmt(total + extra)}`
