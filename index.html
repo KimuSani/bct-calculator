@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-  <title>BCT 배합 단가 계산기</title>
+  <title>배합 단가 산출</title>
   <style>
     :root {
       --blue: #1565c0;
@@ -214,13 +214,46 @@
     .diff-badge.pos  { background: #e8f5e9; color: var(--green); }
     .diff-badge.neg  { background: #ffebee; color: #c62828; }
     .diff-badge.zero { background: #f5f5f5; color: var(--muted); }
+
+    /* ─── Print ─── */
+    @media print {
+      * { -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important; }
+      @page { size: A4; margin: 8mm; }
+
+      body { background: white; padding-bottom: 0; font-size: 10px; }
+
+      header { position: static; box-shadow: none; padding: 4px 10px; }
+      header h1 { font-size: 13px; }
+      header p  { font-size: 9px; }
+      .reset-btn { display: none; }
+
+      .tab-bar { position: static; box-shadow: none; border-radius: 0; }
+      .tab-btn  { padding: 6px 4px; font-size: 11px; }
+
+      .wrap { padding: 6px; }
+
+      .add-btn { display: none; }
+      .del-btn { display: none; }
+      .warn    { display: none !important; }
+      .hint    { display: none; }
+
+      .card { box-shadow: none; border: 1px solid #e0e0e0; margin-bottom: 6px !important; }
+
+      thead th  { padding: 4px 3px; font-size: 10px; }
+      tbody td  { padding: 3px 2px; }
+      td.lbl    { font-size: 10px; }
+      td.val    { font-size: 10px; }
+
+      .cmp-box .cvalue { font-size: 13px; }
+      .cmp-grid { gap: 5px; }
+    }
   </style>
 </head>
 <body>
 
 <header>
   <div class="header-row">
-    <h1>BCT 배합 단가 계산기</h1>
+    <h1>배합 단가 산출</h1>
     <button class="reset-btn" onclick="resetAll()">초기화</button>
   </div>
   <p>단위: 톤 &nbsp;|&nbsp; 금액 단위: 원/톤</p>
@@ -229,8 +262,8 @@
 <div class="wrap">
 
   <div class="tab-bar">
-    <button class="tab-btn active" onclick="switchTab(1)">① BCT 기본배합</button>
-    <button class="tab-btn"        onclick="switchTab(2)">② BCT 출하배합</button>
+    <button class="tab-btn active" onclick="switchTab(1)">① 기본배합</button>
+    <button class="tab-btn"        onclick="switchTab(2)">② 출하배합</button>
   </div>
 
   <!-- ① -->
@@ -376,7 +409,7 @@ const INIT_ROWS = [
   '천연무수석고',
   '탈황석고',
   '플라이애시_EP',
-  '플라이애시_EP',
+  '플라이애시',
 ];
 
 let rows = INIT_ROWS.map(name => ({ name, price: '', r1: '', r2: '' }));
