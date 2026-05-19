@@ -144,7 +144,7 @@
       -webkit-appearance: none;
       appearance: none;
     }
-    input[type="text"] { text-align: left; font-size: 11px; }
+    input[type="text"] { font-size: 11px; }
     input:focus { outline: none; border-color: var(--blue); background: #fff; }
 
     /* delete btn */
@@ -461,7 +461,7 @@ function renderRows() {
       tr.innerHTML =
         `<td style="padding:4px 3px 4px 5px">
            <input type="text" id="r_name${sn}_${i}" value="${row.name}" placeholder="원료명"
-             oninput="syncShared('name',${i},this.value)">
+             style="text-align:left" oninput="syncShared('name',${i},this.value)">
          </td>
          <td style="padding:4px 3px">
            <input type="text" id="r_price${sn}_${i}" value="${fmtInput(row.price)}" placeholder="0"
