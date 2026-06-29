@@ -113,7 +113,9 @@
     }
     .slot-btn.save  { background: var(--blue-light);  color: var(--blue); }
     .slot-btn.load  { background: var(--green-light); color: var(--green); }
-    .slot-btn.del   { background: #ffebee; color: #c62828; }
+    .slot-btn.del    { background: #ffebee; color: #c62828; }
+    .slot-btn.rename { background: #f5f5f5; color: var(--muted); }
+    #slotList { max-height: 60vh; overflow-y: auto; }
     .slot-btn:active { opacity: 0.7; }
     .modal-close {
       width: 100%; padding: 11px;
@@ -686,8 +688,26 @@ function resetAll() {
 }
 
 /* ─── 임시저장 ─── */
-const SAVE_KEY = 'bct_slot_';
-const SLOT_NAMES = ['슬롯 1', '슬롯 2', '슬롯 3'];
+const SAVE_KEY      = 'bct_slot_';
+const SAVE_NAME_KEY = 'bct_slot_name_';
+const SLOT_COUNT    = 9;
+
+function getSlotName(i) {
+  return localStorage.getItem(SAVE_NAME_KEY + i) || `슬롯 ${i + 1}`;
+}
+
+function renameSlot(i) {
+  const current = getSlotName(i);
+  const next = prompt(`슬롯 ${i + 1} 이름 변경`, current);
+  if (next === null) return;
+  const name = next.trim() || `슬롯 ${i + 1}`;
+  if (name === `슬롯 ${i + 1}`) {
+    localStorage.removeItem(SAVE_NAME_KEY + i);
+  } else {
+    localStorage.setItem(SAVE_NAME_KEY + i, name);
+  }
+  renderSlots();
+}
 
 function getState() {
   saveValues();
@@ -715,7 +735,7 @@ function saveToSlot(slot) {
   const existing = localStorage.getItem(SAVE_KEY + slot);
   if (existing) {
     const prev = JSON.parse(existing);
-    if (!confirm(`슬롯 ${slot+1}에 이미 저장된 데이터가 있습니다.\n(${prev.savedAt})\n덮어쓸까요?`)) return;
+    if (!confirm(`"${getSlotName(slot)}"에 이미 저장된 데이터가 있습니다.\n(${prev.savedAt})\n덮어쓸까요?`)) return;
   }
   const state = getState();
   const now = new Date();
@@ -728,28 +748,29 @@ function saveToSlot(slot) {
 function loadFromSlot(slot) {
   const raw = localStorage.getItem(SAVE_KEY + slot);
   if (!raw) return;
-  if (!confirm(`슬롯 ${slot+1}을 불러오면 현재 입력값이 사라집니다. 계속할까요?`)) return;
+  if (!confirm(`"${getSlotName(slot)}"을 불러오면 현재 입력값이 사라집니다. 계속할까요?`)) return;
   applyState(JSON.parse(raw));
   closeSaveModal();
 }
 
 function deleteSlot(slot) {
-  if (!confirm(`슬롯 ${slot+1} 저장 데이터를 삭제할까요?`)) return;
+  if (!confirm(`"${getSlotName(slot)}" 저장 데이터를 삭제할까요?`)) return;
   localStorage.removeItem(SAVE_KEY + slot);
   renderSlots();
 }
 
 function renderSlots() {
   const list = document.getElementById('slotList');
-  list.innerHTML = SLOT_NAMES.map((name, i) => {
-    const raw = localStorage.getItem(SAVE_KEY + i);
+  list.innerHTML = Array.from({length: SLOT_COUNT}, (_, i) => {
+    const name = getSlotName(i);
+    const raw  = localStorage.getItem(SAVE_KEY + i);
     const data = raw ? JSON.parse(raw) : null;
-    const timeStr = data ? data.savedAt : '비어 있음';
+    const timeStr   = data ? data.savedAt : '비어 있음';
     const timeColor = data ? '' : 'color:#bbb';
     return `
       <div class="slot-card">
         <div class="slot-info">
-          <div class="slot-name">${name}</div>
+          <div class="slot-name">${name} <button class="slot-btn rename" onclick="renameSlot(${i})" style="padding:2px 6px;line-height:1"><svg xmlns="http://www.w3.org/2000/svg" width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4Z"/></svg></button></div>
           <div class="slot-time" style="${timeColor}">${timeStr}</div>
         </div>
         <div class="slot-actions">
