@@ -84,10 +84,7 @@
       padding: 16px 16px 24px;
       box-shadow: 0 -4px 20px rgba(0,0,0,0.15);
     }
-    .modal-title {
-      font-size: 15px; font-weight: 700;
-      margin-bottom: 14px; color: var(--text);
-    }
+    .modal-title { font-size: 15px; font-weight: 700; margin-bottom: 14px; color: var(--text); }
     .slot-card {
       border: 1px solid var(--border);
       border-radius: 10px;
@@ -111,12 +108,12 @@
       border: none;
       white-space: nowrap;
     }
-    .slot-btn.save  { background: var(--blue-light);  color: var(--blue); }
-    .slot-btn.load  { background: var(--green-light); color: var(--green); }
+    .slot-btn.save   { background: var(--blue-light);  color: var(--blue); }
+    .slot-btn.load   { background: var(--green-light); color: var(--green); }
     .slot-btn.del    { background: #ffebee; color: #c62828; }
     .slot-btn.rename { background: #f5f5f5; color: var(--muted); }
-    #slotList { max-height: 60vh; overflow-y: auto; }
     .slot-btn:active { opacity: 0.7; }
+    #slotList { max-height: 60vh; overflow-y: auto; }
     .modal-close {
       width: 100%; padding: 11px;
       background: #f5f5f5; border: none;
@@ -128,35 +125,38 @@
 
     .wrap { padding: 12px; }
 
-    /* ─── Tabs ─── */
-    .tab-bar {
+    /* ─── Mix selector ─── */
+    .mix-bar {
       display: flex;
+      align-items: center;
+      gap: 6px;
       background: var(--card);
+      padding: 10px 14px;
       position: sticky;
       top: 56px;
       z-index: 9;
       border-radius: 12px 12px 0 0;
       box-shadow: 0 2px 6px rgba(0,0,0,0.08);
-      overflow: hidden;
+      overflow-x: auto;
+      -webkit-overflow-scrolling: touch;
+      scrollbar-width: none;
     }
-    .tab-btn {
-      flex: 1;
-      padding: 12px 6px;
-      font-size: 13px;
+    .mix-bar::-webkit-scrollbar { display: none; }
+    .mix-btn {
+      padding: 6px 13px;
+      border-radius: 20px;
+      border: 1.5px solid var(--border);
+      background: white;
+      font-size: 12px;
       font-weight: 600;
       color: var(--muted);
-      background: none;
-      border: none;
-      border-bottom: 3px solid transparent;
       cursor: pointer;
-      transition: color 0.15s, background 0.15s, border-color 0.15s;
-      letter-spacing: -0.2px;
+      white-space: nowrap;
+      flex-shrink: 0;
+      transition: all 0.15s;
     }
-    .tab-btn:nth-child(1).active { color: var(--blue);  border-bottom-color: var(--blue);  background: var(--blue-light); }
-    .tab-btn:nth-child(2).active { color: var(--green); border-bottom-color: var(--green); background: var(--green-light); }
-
-    .tab-pane { display: none; }
-    .tab-pane.active { display: block; }
+    .mix-btn.active { background: var(--blue); border-color: var(--blue); color: white; }
+    .mix-btn:active { opacity: 0.7; }
 
     /* ─── Cards ─── */
     .card {
@@ -176,8 +176,22 @@
       justify-content: space-between;
       align-items: center;
     }
+    .card-head.blue { background: var(--blue); }
     .card-head.gray { background: var(--gray); }
     .card-head small { font-size: 11px; font-weight: 400; opacity: 0.8; }
+
+    .mix-name-edit {
+      background: rgba(255,255,255,0.2);
+      border: none;
+      border-radius: 6px;
+      padding: 3px 8px;
+      cursor: pointer;
+      display: flex; align-items: center; gap: 4px;
+      color: white;
+      font-size: 11px;
+      font-weight: 600;
+    }
+    .mix-name-edit:active { background: rgba(255,255,255,0.35); }
 
     /* ─── Table ─── */
     table { width: 100%; border-collapse: collapse; }
@@ -217,7 +231,6 @@
     input[type="text"] { font-size: 11px; }
     input:focus { outline: none; border-color: var(--blue); background: #fff; }
 
-    /* delete btn */
     .del-btn {
       display: flex; align-items: center; justify-content: center;
       width: 26px; height: 26px; margin: 0 auto;
@@ -226,29 +239,21 @@
     }
     .del-btn:active { background: #c62828; color: #fff; }
 
-    /* Row variants */
     tr.r-sub td       { background: #f0f4ff; }
     tr.r-sub td.lbl   { font-weight: 700; color: var(--blue); }
     tr.r-sub td.val   { color: var(--blue); }
-
     tr.r-total td     { background: #dce8ff; }
     tr.r-total td.lbl { font-weight: 700; font-size: 13px; color: var(--blue); }
     tr.r-total td.val { font-size: 13px; font-weight: 700; color: var(--blue); }
-
     tr.r-delivery td     { background: var(--green-light); }
     tr.r-delivery td.lbl { font-weight: 700; color: var(--green); }
-
     tr.r-profit td     { background: var(--orange-light); }
     tr.r-profit td.lbl { font-weight: 700; color: var(--orange); }
     tr.r-profit td.val { font-size: 14px; }
-
     tr.r-shared td     { background: #fff8e1; }
     tr.r-shared td.lbl { font-weight: 700; color: #f57f17; }
 
-    .warn {
-      display: none; font-size: 11px; color: #c62828;
-      padding: 4px 12px; background: #ffebee;
-    }
+    .warn { display: none; font-size: 11px; color: #c62828; padding: 4px 12px; background: #ffebee; }
     .warn.on { display: block; }
 
     .add-btn {
@@ -261,61 +266,57 @@
 
     .hint { font-size: 10px; color: #9e9e9e; padding: 3px 12px 4px; }
 
-    /* ─── Comparison ─── */
+    /* ─── Comparison table ─── */
     .sec-title {
       font-size: 11px; font-weight: 700; color: var(--muted);
       letter-spacing: 0.5px; text-transform: uppercase; padding: 4px 2px 6px;
     }
-    .cmp-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-bottom: 12px; }
-    .cmp-box {
-      background: var(--card); border-radius: 10px; padding: 12px 10px;
-      text-align: center; box-shadow: 0 1px 4px rgba(0,0,0,0.08);
+    .cmp-table { width: 100%; border-collapse: collapse; }
+    .cmp-table th {
+      background: #f5f7ff;
+      padding: 7px 8px;
+      font-size: 11px;
+      color: var(--muted);
+      font-weight: 600;
+      text-align: right;
+      border-bottom: 1px solid var(--border);
     }
-    .cmp-box .clabel { font-size: 10px; color: var(--muted); margin-bottom: 4px; }
-    .cmp-box .cvalue { font-size: 17px; font-weight: 700; line-height: 1.2; }
-    .cmp-box .csub   { font-size: 10px; color: var(--muted); margin-top: 3px; }
-    .cmp-box.blue  .cvalue { color: var(--blue); }
-    .cmp-box.green .cvalue { color: var(--green); }
-    .cmp-box.orange .cvalue { color: var(--orange); }
-    .diff-badge {
-      display: inline-block; font-size: 10px; font-weight: 700;
-      padding: 1px 6px; border-radius: 20px; margin-top: 4px;
+    .cmp-table th:first-child { text-align: left; }
+    .cmp-table td {
+      padding: 8px 8px;
+      font-size: 12px;
+      font-weight: 600;
+      text-align: right;
+      border-bottom: 1px solid #f5f5f5;
+      vertical-align: middle;
     }
-    .diff-badge.pos  { background: #e8f5e9; color: var(--green); }
-    .diff-badge.neg  { background: #ffebee; color: #c62828; }
-    .diff-badge.zero { background: #f5f5f5; color: var(--muted); }
+    .cmp-table td:first-child { text-align: left; font-weight: 700; }
+    .cmp-table tr.active-row td { background: var(--blue-light); }
+    .cmp-table td.profit-pos { color: var(--orange); }
+    .cmp-table td.profit-neg { color: #c62828; }
+    .cmp-table td.muted { color: var(--muted); font-weight: 400; }
 
     /* ─── Print ─── */
     @media print {
       * { -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important; }
       @page { size: A4; margin: 8mm; }
-
       body { background: white; padding-bottom: 0; font-size: 10px; }
-
       header { position: static; box-shadow: none; padding: 4px 10px; }
       header h1 { font-size: 13px; }
       header p  { font-size: 9px; }
-      .reset-btn { display: none; }
-
-      .tab-bar { position: static; box-shadow: none; border-radius: 0; }
-      .tab-btn  { padding: 6px 4px; font-size: 11px; }
-
+      .reset-btn, .save-btn { display: none; }
+      .mix-bar { position: static; box-shadow: none; border-radius: 0; padding: 6px 10px; }
+      .mix-btn  { width: 26px; height: 26px; font-size: 12px; }
+      .mix-name-edit { display: none; }
       .wrap { padding: 6px; }
-
-      .add-btn { display: none; }
-      .del-btn { display: none; }
-      .warn    { display: none !important; }
-      .hint    { display: none; }
-
+      .add-btn, .del-btn { display: none; }
+      .warn { display: none !important; }
+      .hint { display: none; }
       .card { box-shadow: none; border: 1px solid #e0e0e0; margin-bottom: 6px !important; }
-
-      thead th  { padding: 4px 3px; font-size: 10px; }
-      tbody td  { padding: 3px 2px; }
-      td.lbl    { font-size: 10px; }
-      td.val    { font-size: 10px; }
-
-      .cmp-box .cvalue { font-size: 13px; }
-      .cmp-grid { gap: 5px; }
+      thead th, .cmp-table th { padding: 4px 3px; font-size: 10px; }
+      tbody td, .cmp-table td { padding: 3px 2px; font-size: 10px; }
+      td.lbl { font-size: 10px; }
+      td.val  { font-size: 10px; }
     }
   </style>
 </head>
@@ -334,94 +335,56 @@
 
 <div class="wrap">
 
-  <div class="tab-bar">
-    <button class="tab-btn active" onclick="switchTab(1)">① 기본배합</button>
-    <button class="tab-btn"        onclick="switchTab(2)">② 출하배합</button>
-  </div>
+  <div class="mix-bar" id="mixBar"></div>
 
-  <!-- ① -->
-  <div class="tab-pane active" id="pane1">
-    <div class="card top">
-      <table>
-        <thead><tr>
-          <th style="width:30%">원 료 명</th>
-          <th style="width:22%">단 가</th>
-          <th style="width:17%">배합%</th>
-          <th style="width:22%">금 액</th>
-          <th style="width:9%"></th>
-        </tr></thead>
-        <tbody id="mat1"></tbody>
-      </table>
-      <button class="add-btn" onclick="addMaterial()">＋ 원료 추가</button>
-      <div class="warn" id="warn1">⚠ 배합% 합계가 100%가 아닙니다</div>
-      <table><tbody>
-        <tr class="r-sub">
-          <td class="lbl" colspan="2">소계</td>
-          <td class="val" id="s1_pct" style="font-size:11px">-</td>
-          <td class="val hi" id="s1_sub">-</td>
-          <td></td>
-        </tr>
-        <tr class="r-total">
-          <td class="lbl" colspan="2">합계</td>
-          <td></td>
-          <td class="val" id="s1_total">-</td>
-          <td></td>
-        </tr>
-        <tr class="r-profit">
-          <td class="lbl" colspan="2">매출이익</td>
-          <td></td>
-          <td class="val" id="s1_profit">-</td>
-          <td></td>
-        </tr>
-      </tbody></table>
-      <div class="hint" id="s1_hint"></div>
+  <div class="card top">
+    <div class="card-head blue">
+      <span id="mixNameDisplay">배합 ①</span>
+      <button class="mix-name-edit" onclick="renameMix()">
+        <svg xmlns="http://www.w3.org/2000/svg" width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4Z"/></svg>
+        이름 변경
+      </button>
     </div>
-  </div>
-
-  <!-- ② -->
-  <div class="tab-pane" id="pane2">
-    <div class="card top">
-      <table>
-        <thead><tr>
-          <th style="width:30%">원 료 명</th>
-          <th style="width:22%">단 가</th>
-          <th style="width:17%">배합%</th>
-          <th style="width:22%">금 액</th>
-          <th style="width:9%"></th>
-        </tr></thead>
-        <tbody id="mat2"></tbody>
-      </table>
-      <button class="add-btn" onclick="addMaterial()">＋ 원료 추가</button>
-      <div class="warn" id="warn2">⚠ 배합% 합계가 100%가 아닙니다</div>
-      <table><tbody>
-        <tr class="r-sub">
-          <td class="lbl" colspan="2">소계</td>
-          <td class="val" id="s2_pct" style="font-size:11px">-</td>
-          <td class="val hi" id="s2_sub">-</td>
-          <td></td>
-        </tr>
-        <tr class="r-total">
-          <td class="lbl" colspan="2">합계</td>
-          <td></td>
-          <td class="val" id="s2_total">-</td>
-          <td></td>
-        </tr>
-        <tr class="r-profit">
-          <td class="lbl" colspan="2">매출이익</td>
-          <td></td>
-          <td class="val" id="s2_profit">-</td>
-          <td></td>
-        </tr>
-      </tbody></table>
-      <div class="hint" id="s2_hint"></div>
-    </div>
+    <table>
+      <thead><tr>
+        <th style="width:30%">원 료 명</th>
+        <th style="width:22%">단 가</th>
+        <th style="width:17%">배합%</th>
+        <th style="width:22%">금 액</th>
+        <th style="width:9%"></th>
+      </tr></thead>
+      <tbody id="matMain"></tbody>
+    </table>
+    <button class="add-btn" onclick="addMaterial()">＋ 원료 추가</button>
+    <div class="warn" id="warnMain">⚠ 배합% 합계가 100%가 아닙니다</div>
+    <table><tbody>
+      <tr class="r-sub">
+        <td class="lbl" colspan="2">소계</td>
+        <td class="val" id="sm_pct" style="font-size:11px">-</td>
+        <td class="val hi" id="sm_sub">-</td>
+        <td></td>
+      </tr>
+      <tr class="r-total">
+        <td class="lbl" colspan="2">합계</td>
+        <td></td>
+        <td class="val" id="sm_total">-</td>
+        <td></td>
+      </tr>
+      <tr class="r-profit">
+        <td class="lbl" colspan="2">매출이익</td>
+        <td></td>
+        <td class="val" id="sm_profit">-</td>
+        <td></td>
+      </tr>
+    </tbody></table>
+    <div class="hint" id="sm_hint"></div>
   </div>
 
   <!-- 공통 비용 -->
   <div class="card mid">
     <div class="card-head gray">
       <span>공통 비용 / 납품</span>
-      <small>①② 동일 적용</small>
+      <small>①~⑤ 동일 적용</small>
     </div>
     <table><tbody>
       <tr>
@@ -449,28 +412,18 @@
 
   <!-- 비교 요약 -->
   <div class="sec-title">— 비교 요약 —</div>
-  <div class="cmp-grid">
-    <div class="cmp-box blue">
-      <div class="clabel">① BCT 기본배합 원가</div>
-      <div class="cvalue" id="c1_total">-</div>
-      <div class="csub">원/톤</div>
-    </div>
-    <div class="cmp-box green">
-      <div class="clabel">② BCT 출하배합 원가</div>
-      <div class="cvalue" id="c2_total">-</div>
-      <div class="csub">원/톤</div>
-      <div id="cost_diff"></div>
-    </div>
-    <div class="cmp-box orange">
-      <div class="clabel">① BCT 기본배합 매출이익</div>
-      <div class="cvalue" id="c1_profit">-</div>
-      <div class="csub" id="c1_margin">-</div>
-    </div>
-    <div class="cmp-box orange">
-      <div class="clabel">② BCT 출하배합 매출이익</div>
-      <div class="cvalue" id="c2_profit">-</div>
-      <div class="csub" id="c2_margin">-</div>
-    </div>
+  <div class="card mid">
+    <table class="cmp-table">
+      <thead>
+        <tr>
+          <th>배합</th>
+          <th>원가 (원/톤)</th>
+          <th>매출이익</th>
+          <th>이익률</th>
+        </tr>
+      </thead>
+      <tbody id="cmpBody"></tbody>
+    </table>
   </div>
 
 </div>
@@ -493,197 +446,210 @@ const INIT_ROWS = [
   '플라이애시_EP',
   '플라이애시',
 ];
+const MIX_COUNT = 5;
+const MIX_NUM   = ['①','②','③','④','⑤'];
 
-let rows = INIT_ROWS.map(name => ({ name, price: '', r1: '', r2: '' }));
+let activeTab = 0;
+let rows = INIT_ROWS.map(name => ({ name, price: '', r: Array(MIX_COUNT).fill('') }));
 
+/* ─── 숫자 포맷 ─── */
 function fmt(n) {
   if (n == null || isNaN(n) || n === 0) return '-';
   return Math.round(n).toLocaleString('ko-KR');
 }
-
 function parseNum(v) {
   return parseFloat(String(v || '').replace(/,/g, '')) || 0;
 }
-
 function fmtInput(v) {
   const n = parseFloat(String(v || '').replace(/,/g, ''));
   return (n && !isNaN(n)) ? Math.round(n).toLocaleString('ko-KR') : '';
 }
-
-function formatInputOnBlur(el) {
-  el.value = fmtInput(el.value);
-}
-
+function formatInputOnBlur(el) { el.value = fmtInput(el.value); }
 function stripInputOnFocus(el) {
   const n = parseFloat(String(el.value).replace(/,/g, ''));
   el.value = (n && !isNaN(n)) ? String(Math.round(n)) : '';
 }
 
-function saveValues() {
+/* ─── 배합 이름 ─── */
+const MIX_NAME_KEY = 'bct_mix_name_';
+// 인메모리 배열 — localStorage는 초기 로드·renameMix에서만 동기화
+let mixNames = Array.from({length: MIX_COUNT}, (_, i) => localStorage.getItem(MIX_NAME_KEY + i) || null);
+function getMixName(i) {
+  return mixNames[i] || `${i + 1}번 배합`;
+}
+function renameMix() {
+  const current = getMixName(activeTab);
+  const next = prompt(`배합 이름 변경`, current);
+  if (next === null) return;
+  const trimmed = next.trim();
+  const isDefault = trimmed === '' || trimmed === `${activeTab + 1}번 배합`;
+  mixNames[activeTab] = isDefault ? null : trimmed;
+  if (isDefault) localStorage.removeItem(MIX_NAME_KEY + activeTab);
+  else localStorage.setItem(MIX_NAME_KEY + activeTab, trimmed);
+  updateMixHead();
+  renderComparison(lastResults);
+}
+function renderMixBar() {
+  document.getElementById('mixBar').innerHTML = Array.from({length: MIX_COUNT}, (_, i) =>
+    `<button class="mix-btn${i === activeTab ? ' active' : ''}" onclick="switchMix(${i})">${getMixName(i)}</button>`
+  ).join('');
+}
+function updateMixHead() {
+  document.getElementById('mixNameDisplay').textContent = getMixName(activeTab);
+  renderMixBar();
+}
+
+/* ─── 행 관리 ─── */
+function saveCurrentRatios() {
   rows.forEach((row, i) => {
-    const n1 = document.getElementById(`r_name1_${i}`);
-    const p1 = document.getElementById(`r_price1_${i}`);
-    const r1 = document.getElementById(`r_ratio1_${i}`);
-    const r2 = document.getElementById(`r_ratio2_${i}`);
-    if (n1) row.name  = n1.value;
-    if (p1) row.price = String(p1.value).replace(/,/g, '');
-    if (r1) row.r1    = r1.value;
-    if (r2) row.r2    = r2.value;
+    const re = document.getElementById(`r_ratio_${i}`);
+    if (re) row.r[activeTab] = re.value;
+    const ne = document.getElementById(`r_name_${i}`);
+    if (ne) row.name = ne.value;
+    const pe = document.getElementById(`r_price_${i}`);
+    if (pe) row.price = String(pe.value).replace(/,/g, '');
   });
 }
 
 function renderRows() {
-  ['mat1', 'mat2'].forEach((tbodyId, ti) => {
-    const sn   = ti === 0 ? '1' : '2';
-    const rKey = ti === 0 ? 'r1' : 'r2';
-    const tbody = document.getElementById(tbodyId);
-    tbody.innerHTML = '';
-    rows.forEach((row, i) => {
-      const tr = document.createElement('tr');
-      tr.innerHTML =
-        `<td style="padding:4px 3px 4px 5px">
-           <input type="text" id="r_name${sn}_${i}" value="${row.name}" placeholder="원료명"
-             style="text-align:left" oninput="syncShared('name',${i},this.value)">
-         </td>
-         <td style="padding:4px 3px">
-           <input type="text" id="r_price${sn}_${i}" value="${fmtInput(row.price)}" placeholder="0"
-             inputmode="numeric"
-             onfocus="stripInputOnFocus(this)"
-             onblur="formatInputOnBlur(this)"
-             oninput="syncShared('price',${i},this.value.replace(/,/g,''))">
-         </td>
-         <td style="padding:4px 3px">
-           <input type="number" id="r_ratio${sn}_${i}" value="${row[rKey]}" placeholder="0"
-             inputmode="decimal" oninput="calc()">
-         </td>
-         <td class="val hi" id="r_amt${sn}_${i}" style="min-width:56px">-</td>
-         <td style="padding:3px 4px 3px 0; text-align:center">
-           <button class="del-btn" onclick="deleteMaterial(${i})">✕</button>
-         </td>`;
-      tbody.appendChild(tr);
-    });
+  const tbody = document.getElementById('matMain');
+  tbody.innerHTML = '';
+  rows.forEach((row, i) => {
+    const tr = document.createElement('tr');
+    tr.innerHTML =
+      `<td style="padding:4px 3px 4px 5px">
+         <input type="text" id="r_name_${i}" value="${row.name}" placeholder="원료명"
+           style="text-align:left" oninput="onNameInput(${i},this.value)">
+       </td>
+       <td style="padding:4px 3px">
+         <input type="text" id="r_price_${i}" value="${fmtInput(row.price)}" placeholder="0"
+           inputmode="numeric"
+           onfocus="stripInputOnFocus(this)"
+           onblur="formatInputOnBlur(this)"
+           oninput="onPriceInput(${i},this.value.replace(/,/g,''))">
+       </td>
+       <td style="padding:4px 3px">
+         <input type="number" id="r_ratio_${i}" value="${row.r[activeTab]}" placeholder="0"
+           inputmode="decimal" oninput="onRatioInput(${i},this.value)">
+       </td>
+       <td class="val hi" id="r_amt_${i}" style="min-width:56px">-</td>
+       <td style="padding:3px 4px 3px 0; text-align:center">
+         <button class="del-btn" onclick="deleteMaterial(${i})">✕</button>
+       </td>`;
+    tbody.appendChild(tr);
   });
 }
 
-function syncShared(field, i, val) {
-  rows[i][field] = val;
-  const other = field === 'name'
-    ? (document.getElementById(`r_name1_${i}`) === document.activeElement
-        ? document.getElementById(`r_name2_${i}`)
-        : document.getElementById(`r_name1_${i}`))
-    : (document.getElementById(`r_price1_${i}`) === document.activeElement
-        ? document.getElementById(`r_price2_${i}`)
-        : document.getElementById(`r_price1_${i}`));
-  if (other && other !== document.activeElement) {
-    other.value = field === 'price' ? fmtInput(val) : val;
-  }
-  calc();
-}
+function onNameInput(i, val)  { rows[i].name = val; calc(); }
+function onPriceInput(i, val) { rows[i].price = val; calc(); }
+function onRatioInput(i, val) { rows[i].r[activeTab] = val; calc(); }
 
 function addMaterial() {
-  saveValues();
-  rows.push({ name: '', price: '', r1: '', r2: '' });
+  saveCurrentRatios();
+  rows.push({ name: '', price: '', r: Array(MIX_COUNT).fill('') });
   renderRows();
   calc();
 }
-
 function deleteMaterial(i) {
-  saveValues();
+  saveCurrentRatios();
   rows.splice(i, 1);
   renderRows();
   calc();
 }
 
-function calcSection(s) {
-  const sn   = s === 's1' ? '1' : '2';
-  const rKey = s === 's1' ? 'r1' : 'r2';
-  let sumR = 0, sumA = 0;
+/* ─── 계산 ─── */
+let lastResults = [];
 
-  rows.forEach((row, i) => {
-    const price = parseNum(row.price);
-    const ratioEl = document.getElementById(`r_ratio${sn}_${i}`);
-    const ratio = parseFloat(ratioEl != null ? ratioEl.value : row[rKey]) || 0;
-    const amt   = price * ratio / 100;
-    sumR += ratio;
-    sumA += amt;
-    const el = document.getElementById(`r_amt${sn}_${i}`);
-    if (el) el.textContent = amt > 0 ? fmt(amt) : '-';
-  });
-
-  document.getElementById(`${s}_pct`).textContent = sumR > 0 ? sumR.toFixed(1) + '%' : '-';
-  document.getElementById(`${s}_sub`).textContent = sumA > 0 ? fmt(sumA) : '-';
-
-  document.getElementById(`warn${sn}`).classList.toggle('on', sumR > 0 && Math.abs(sumR - 100) > 0.05);
-
-  // 공통 비용
+function calcMix(tabIdx) {
   const proc  = parseNum(document.getElementById('proc')?.value);
   const bag   = parseNum(document.getElementById('bag')?.value);
   const trans = parseNum(document.getElementById('trans')?.value);
-  const total = sumA + proc + bag + trans;
-
-  document.getElementById(`${s}_total`).textContent = total > 0 ? fmt(total) : '-';
-
-  // 납품단가 힌트
   const extra = parseNum(document.getElementById('extra')?.value);
   const del   = parseNum(document.getElementById('del')?.value);
-  const hintEl = document.getElementById(`${s}_hint`);
-  hintEl.textContent = (total > 0 && extra > 0)
-    ? `납품단가 참고: ${fmt(total)} + ${fmt(extra)} = ${fmt(total + extra)}`
-    : '';
 
+  let sumR = 0, sumA = 0;
+  rows.forEach((row, i) => {
+    const price = parseNum(row.price);
+    const ratio = parseFloat(row.r[tabIdx]) || 0;
+    const amt   = price * ratio / 100;
+    sumR += ratio;
+    sumA += amt;
+    if (tabIdx === activeTab) {
+      const el = document.getElementById(`r_amt_${i}`);
+      if (el) el.textContent = amt > 0 ? fmt(amt) : '-';
+    }
+  });
+
+  const total  = sumA + proc + bag + trans;
   const profit = del > 0 ? del - total : null;
-  const profEl = document.getElementById(`${s}_profit`);
-  if (profit !== null) {
-    profEl.textContent = fmt(profit);
-    profEl.style.color = profit >= 0 ? 'var(--orange)' : '#c62828';
-  } else {
-    profEl.textContent = '-';
-    profEl.style.color = 'var(--muted)';
+
+  if (tabIdx === activeTab) {
+    document.getElementById('sm_pct').textContent   = sumR > 0 ? sumR.toFixed(1) + '%' : '-';
+    document.getElementById('sm_sub').textContent   = sumA > 0 ? fmt(sumA) : '-';
+    document.getElementById('sm_total').textContent = total > 0 ? fmt(total) : '-';
+    document.getElementById('warnMain').classList.toggle('on', sumR > 0 && Math.abs(sumR - 100) > 0.05);
+
+    const hintEl = document.getElementById('sm_hint');
+    hintEl.textContent = (total > 0 && extra > 0)
+      ? `납품단가 참고: ${fmt(total)} + ${fmt(extra)} = ${fmt(total + extra)}`
+      : '';
+
+    const profEl = document.getElementById('sm_profit');
+    if (profit !== null) {
+      profEl.textContent = fmt(profit);
+      profEl.style.color = profit >= 0 ? 'var(--orange)' : '#c62828';
+    } else {
+      profEl.textContent = '-';
+      profEl.style.color = 'var(--muted)';
+    }
   }
 
-  return { total, del, profit };
+  return { sumR, total, profit, del };
 }
 
 function calc() {
-  const r1 = calcSection('s1');
-  const r2 = calcSection('s2');
-
-  document.getElementById('c1_total').textContent = r1.total > 0 ? fmt(r1.total) : '-';
-  document.getElementById('c2_total').textContent = r2.total > 0 ? fmt(r2.total) : '-';
-
-  const diffEl = document.getElementById('cost_diff');
-  if (r1.total > 0 && r2.total > 0) {
-    const diff = r2.total - r1.total;
-    const cls  = diff < 0 ? 'pos' : diff > 0 ? 'neg' : 'zero';
-    diffEl.innerHTML = `<span class="diff-badge ${cls}">${diff > 0 ? '+' : ''}${fmt(diff)}</span>`;
-  } else {
-    diffEl.innerHTML = '';
-  }
-
-  function setProfit(id, midId, profit, del) {
-    document.getElementById(id).textContent = profit !== null ? fmt(profit) : '-';
-    document.getElementById(id).style.color = (profit !== null && profit < 0) ? '#c62828' : 'var(--orange)';
-    document.getElementById(midId).textContent =
-      (profit !== null && del > 0) ? `이익률 ${(profit / del * 100).toFixed(1)}%` : '-';
-  }
-  setProfit('c1_profit', 'c1_margin', r1.profit, r1.del);
-  setProfit('c2_profit', 'c2_margin', r2.profit, r2.del);
+  lastResults = Array.from({length: MIX_COUNT}, (_, i) => calcMix(i));
+  renderComparison(lastResults);
 }
 
-function switchTab(n) {
-  document.querySelectorAll('.tab-btn').forEach((b, i) => b.classList.toggle('active', i === n - 1));
-  document.querySelectorAll('.tab-pane').forEach((p, i) => p.classList.toggle('active', i === n - 1));
+function renderComparison(results) {
+  const body = document.getElementById('cmpBody');
+  body.innerHTML = results.map((r, i) => {
+    const isActive   = i === activeTab;
+    const hasData    = r.total > 0;
+    const profitCls  = r.profit !== null ? (r.profit >= 0 ? 'profit-pos' : 'profit-neg') : 'muted';
+    const marginStr  = (r.profit !== null && r.del > 0)
+      ? `${(r.profit / r.del * 100).toFixed(1)}%` : '-';
+    return `<tr class="${isActive ? 'active-row' : ''}">
+      <td>${getMixName(i)}</td>
+      <td class="${hasData ? '' : 'muted'}">${hasData ? fmt(r.total) : '-'}</td>
+      <td class="${r.profit !== null ? profitCls : 'muted'}">${r.profit !== null ? fmt(r.profit) : '-'}</td>
+      <td class="${r.profit !== null ? profitCls : 'muted'}">${marginStr}</td>
+    </tr>`;
+  }).join('');
 }
 
+/* ─── 탭 전환 ─── */
+function switchMix(n) {
+  saveCurrentRatios();
+  activeTab = n;
+  renderRows();
+  updateMixHead();
+  calc();
+}
+
+/* ─── 초기화 ─── */
 function resetAll() {
   if (!confirm('모든 입력값을 초기화할까요?')) return;
-  rows = INIT_ROWS.map(name => ({ name, price: '', r1: '', r2: '' }));
+  rows = INIT_ROWS.map(name => ({ name, price: '', r: Array(MIX_COUNT).fill('') }));
+  activeTab = 0;
+  mixNames = Array(MIX_COUNT).fill(null);
   renderRows();
   ['proc','bag','trans','extra','del'].forEach(id => {
     const el = document.getElementById(id);
     if (el) el.value = '';
   });
-  switchTab(1);
+  updateMixHead();
   calc();
 }
 
@@ -695,7 +661,6 @@ const SLOT_COUNT    = 9;
 function getSlotName(i) {
   return localStorage.getItem(SAVE_NAME_KEY + i) || `슬롯 ${i + 1}`;
 }
-
 function renameSlot(i) {
   const current = getSlotName(i);
   const next = prompt(`슬롯 ${i + 1} 이름 변경`, current);
@@ -710,9 +675,11 @@ function renameSlot(i) {
 }
 
 function getState() {
-  saveValues();
+  saveCurrentRatios();
   return {
-    rows:  rows.map(r => ({...r})),
+    rows:      rows.map(r => ({...r, r: [...r.r]})),
+    activeTab,
+    mixNames:  [...mixNames],
     proc:  String(document.getElementById('proc')?.value  || '').replace(/,/g, ''),
     bag:   String(document.getElementById('bag')?.value   || '').replace(/,/g, ''),
     trans: String(document.getElementById('trans')?.value || '').replace(/,/g, ''),
@@ -720,10 +687,22 @@ function getState() {
     del:   String(document.getElementById('del')?.value   || '').replace(/,/g, ''),
   };
 }
-
 function applyState(state) {
-  rows = state.rows.map(r => ({...r}));
+  rows = state.rows.map(r => {
+    if (!r.r) r.r = [r.r1 || '', r.r2 || '', '', '', ''];
+    return {...r, r: [...r.r]};
+  });
+  activeTab = state.activeTab ?? 0;
+  // 배합 이름 복원 — 인메모리 배열 직접 덮어씀
+  if (state.mixNames) {
+    state.mixNames.forEach((name, i) => {
+      mixNames[i] = name || null;
+    });
+  } else {
+    mixNames = Array(MIX_COUNT).fill(null);
+  }
   renderRows();
+  updateMixHead();
   ['proc','bag','trans','extra','del'].forEach(id => {
     const el = document.getElementById(id);
     if (el) el.value = fmtInput(state[id] || '');
@@ -738,13 +717,11 @@ function saveToSlot(slot) {
     if (!confirm(`"${getSlotName(slot)}"에 이미 저장된 데이터가 있습니다.\n(${prev.savedAt})\n덮어쓸까요?`)) return;
   }
   const state = getState();
-  const now = new Date();
-  const pad = n => String(n).padStart(2, '0');
+  const now = new Date(), pad = n => String(n).padStart(2, '0');
   state.savedAt = `${now.getFullYear()}.${pad(now.getMonth()+1)}.${pad(now.getDate())} ${pad(now.getHours())}:${pad(now.getMinutes())}`;
   localStorage.setItem(SAVE_KEY + slot, JSON.stringify(state));
   renderSlots();
 }
-
 function loadFromSlot(slot) {
   const raw = localStorage.getItem(SAVE_KEY + slot);
   if (!raw) return;
@@ -752,26 +729,23 @@ function loadFromSlot(slot) {
   applyState(JSON.parse(raw));
   closeSaveModal();
 }
-
 function deleteSlot(slot) {
   if (!confirm(`"${getSlotName(slot)}" 저장 데이터를 삭제할까요?`)) return;
   localStorage.removeItem(SAVE_KEY + slot);
   renderSlots();
 }
-
 function renderSlots() {
   const list = document.getElementById('slotList');
+  const penIcon = `<svg xmlns="http://www.w3.org/2000/svg" width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4Z"/></svg>`;
   list.innerHTML = Array.from({length: SLOT_COUNT}, (_, i) => {
     const name = getSlotName(i);
     const raw  = localStorage.getItem(SAVE_KEY + i);
     const data = raw ? JSON.parse(raw) : null;
-    const timeStr   = data ? data.savedAt : '비어 있음';
-    const timeColor = data ? '' : 'color:#bbb';
     return `
       <div class="slot-card">
         <div class="slot-info">
-          <div class="slot-name">${name} <button class="slot-btn rename" onclick="renameSlot(${i})" style="padding:2px 6px;line-height:1"><svg xmlns="http://www.w3.org/2000/svg" width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4Z"/></svg></button></div>
-          <div class="slot-time" style="${timeColor}">${timeStr}</div>
+          <div class="slot-name">${name} <button class="slot-btn rename" onclick="renameSlot(${i})" style="padding:2px 6px;line-height:1">${penIcon}</button></div>
+          <div class="slot-time" style="${data ? '' : 'color:#bbb'}">${data ? data.savedAt : '비어 있음'}</div>
         </div>
         <div class="slot-actions">
           <button class="slot-btn save" onclick="saveToSlot(${i})">저장</button>
@@ -781,21 +755,12 @@ function renderSlots() {
       </div>`;
   }).join('');
 }
-
-function openSaveModal() {
-  renderSlots();
-  document.getElementById('saveModal').classList.add('on');
-}
-
-function closeSaveModal() {
-  document.getElementById('saveModal').classList.remove('on');
-}
-
-function onBackdropClick(e) {
-  if (e.target === document.getElementById('saveModal')) closeSaveModal();
-}
+function openSaveModal()    { renderSlots(); document.getElementById('saveModal').classList.add('on'); }
+function closeSaveModal()   { document.getElementById('saveModal').classList.remove('on'); }
+function onBackdropClick(e) { if (e.target === document.getElementById('saveModal')) closeSaveModal(); }
 
 renderRows();
+updateMixHead();
 calc();
 </script>
 </body>
