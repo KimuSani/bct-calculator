@@ -43,6 +43,24 @@
     .header-row { display: flex; justify-content: space-between; align-items: center; }
     header h1 { font-size: 16px; font-weight: 700; letter-spacing: -0.3px; }
     header p  { font-size: 11px; opacity: 0.75; margin-top: 2px; }
+    .slot-display-bar {
+      background: #f0f4fa;
+      border-bottom: 1px solid #dde4ee;
+      padding: 8px 16px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .slot-display-bar .sdl { font-size: 11px; color: #888; white-space: nowrap; }
+    .slot-display-bar .sdn { font-size: 15px; font-weight: 700; color: #1a3a6b; letter-spacing: -0.3px; }
+    @media (prefers-color-scheme: dark) {
+      .slot-display-bar { background: #1a2030; border-color: #2a3348; }
+      .slot-display-bar .sdl { color: #6a7a99; }
+      .slot-display-bar .sdn { color: #a8c0f0; }
+    }
+    :root[data-theme="dark"] .slot-display-bar { background: #1a2030; border-color: #2a3348; }
+    :root[data-theme="dark"] .slot-display-bar .sdl { color: #6a7a99; }
+    :root[data-theme="dark"] .slot-display-bar .sdn { color: #a8c0f0; }
     .reset-btn {
       padding: 5px 12px;
       background: rgba(255,255,255,0.15);
@@ -332,6 +350,11 @@
   </div>
   <p>단위: 톤 &nbsp;|&nbsp; 금액 단위: 원/톤</p>
 </header>
+
+<div class="slot-display-bar">
+  <span class="sdl">현재 슬롯</span>
+  <span class="sdn" id="currentSlotLabel" style="opacity:0.45">저장 없음</span>
+</div>
 
 <div class="wrap">
 
@@ -644,19 +667,34 @@ function resetAll() {
   rows = INIT_ROWS.map(name => ({ name, price: '', r: Array(MIX_COUNT).fill('') }));
   activeTab = 0;
   mixNames = Array(MIX_COUNT).fill(null);
+  currentSlotIdx = null;
   renderRows();
   ['proc','bag','trans','extra','del'].forEach(id => {
     const el = document.getElementById(id);
     if (el) el.value = '';
   });
   updateMixHead();
+  updateSlotDisplay();
   calc();
 }
 
 /* ─── 임시저장 ─── */
 const SAVE_KEY      = 'bct_slot_';
 const SAVE_NAME_KEY = 'bct_slot_name_';
-const SLOT_COUNT    = 9;
+const SLOT_COUNT    = 20;
+let currentSlotIdx  = null;
+
+function updateSlotDisplay() {
+  const el = document.getElementById('currentSlotLabel');
+  if (!el) return;
+  if (currentSlotIdx !== null) {
+    el.textContent = getSlotName(currentSlotIdx);
+    el.style.opacity = '1';
+  } else {
+    el.textContent = '저장 없음';
+    el.style.opacity = '0.45';
+  }
+}
 
 function getSlotName(i) {
   return localStorage.getItem(SAVE_NAME_KEY + i) || `슬롯 ${i + 1}`;
@@ -720,6 +758,8 @@ function saveToSlot(slot) {
   const now = new Date(), pad = n => String(n).padStart(2, '0');
   state.savedAt = `${now.getFullYear()}.${pad(now.getMonth()+1)}.${pad(now.getDate())} ${pad(now.getHours())}:${pad(now.getMinutes())}`;
   localStorage.setItem(SAVE_KEY + slot, JSON.stringify(state));
+  currentSlotIdx = slot;
+  updateSlotDisplay();
   renderSlots();
 }
 function loadFromSlot(slot) {
@@ -727,6 +767,8 @@ function loadFromSlot(slot) {
   if (!raw) return;
   if (!confirm(`"${getSlotName(slot)}"을 불러오면 현재 입력값이 사라집니다. 계속할까요?`)) return;
   applyState(JSON.parse(raw));
+  currentSlotIdx = slot;
+  updateSlotDisplay();
   closeSaveModal();
 }
 function deleteSlot(slot) {
